@@ -1,0 +1,14 @@
+
+
+EDIT: The solution is to install JDK 8, as JDK 9 and beyond are currently not supported.
+
+If however, you already have installed JDK 8, then kindly follow the steps outlined below.
+
+The reason is that there is a conflict with the base JDK that NetBeans starts with. You have to set it to a lower version.
+
+    Go to the folder "C:\Program Files\NetBeans 8.2\etc", or wherever NetBeans is installed.
+    Open the netbeans.conf file.
+    Locate netbeans_jdkhome and replace the JDK path there with "C:\Program Files\Java\jdk1.8.0_261", or wherever your JDK is installed. Be sure to use the right path, or you will run into problems. Here, JDK 1.8.0_152 is installed.
+    Save the file, and restart NetBeans. It worked for me, should do for you too.
+
+	if "C:\Program Files\Java\jdk1.8.0_261" not present you need to install it
