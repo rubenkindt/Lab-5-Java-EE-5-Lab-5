@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Quote;
@@ -18,8 +20,11 @@ import rental.ReservationException;
 
 @Stateful
 @TransactionAttribute(value=REQUIRED)
-public class ReservationSession extends Session implements ReservationSessionRemote {
-
+public class ReservationSession implements ReservationSessionRemote {
+    
+    @PersistenceContext
+    EntityManager em;
+        
     private String renter;
     private List<Quote> quotes = new LinkedList<Quote>();
 
@@ -36,6 +41,14 @@ public class ReservationSession extends Session implements ReservationSessionRem
             }
         }
         return availableCarTypes;*/
+    }
+    protected CarRentalCompany getCompanyByName(String company){
+        CarRentalCompany compa =em.find(CarRentalCompany.class, company);
+        if (compa==null){
+            throw new IllegalArgumentException("Company doesn't exist!: " + company);
+         
+        }
+        return compa;
     }
 
     @Override

@@ -29,7 +29,7 @@ import rental.Reservation;
 @DeclareRoles("Manager")
 @Stateless
 @RolesAllowed("Manager")
-public class ManagerSession extends Session implements ManagerSessionRemote {
+public class ManagerSession implements ManagerSessionRemote {
     
     @PersistenceContext
     EntityManager em;
@@ -37,72 +37,26 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
     @Override
     public List<CarType> getCarTypes(String company) {
         return em.createNamedQuery("CarRentalCompany.getCarTypes").setParameter("compName", company).getResultList();
-        
-        /*
-        List<CarType> ct=new ArrayList<CarType>();
-        try {
-            List<CarRentalCompany> list=getRentalCompanies();
-            for (CarRentalCompany r : list){
-                ct.addAll(r.getAllTypes());
-            }
-            
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-        return ct;
-*/
+
     }
 
     @Override
     public List<Integer> getCarIds(String company, String type) {
         return em.createNamedQuery("CarRentalCompany.getCarIds").setParameter("compName", company).setParameter("typeName", type).getResultList();
     }
-        /*
-        Set<Integer> out = new HashSet<Integer>();
-        try {
-            for(Car c: getCompanyByName(company).getCars(type)){
-                out.add(c.getId());
-            }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-        return out;
-    }
-*/
+        
 
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservations").setParameter("compName", company).setParameter("typeName", type).setParameter("id",id).getSingleResult();
     }
-     /*   
-        try {
-            return getCompanyByName(company).getCar(id).getReservations().size();
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-    }
-    */
     
     @Override
     public int getNumberOfReservations(String company, String type) {
         return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservations2").setParameter("compName", company).setParameter("typeName", type).getSingleResult();
-    }      
-        /*
-        Set<Reservation> out = new HashSet<Reservation>();
-        try {
-            for(Car c: getCompanyByName(company).getCars(type)){
-                out.addAll(c.getReservations());
-            }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-        return out.size();
-    }
-*/  
+    }   
+    
+    
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         return  em.createNamedQuery("car.getAvailableCarTypes").setParameter("start", start).setParameter("end", end).getResultList();
@@ -113,17 +67,7 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
     public int getNrOfReservationsByClient(String clientName) {
         return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservationsByClient").setParameter("client", clientName).getSingleResult();
     }
-        /*
-        Set<Reservation> res=new HashSet<Reservation>();
-        for (Iterator<Map.Entry<String, CarRentalCompany>> entries = getRentals().entrySet().iterator(); entries.hasNext(); ) {
-            Map.Entry<String, CarRentalCompany> compMap= entries.next();
-            CarRentalCompany compa= compMap.getValue();
-            
-            res.addAll(compa.getReservationsBy(clientName));
-        }
-        return res.size();
-    }
-    */
+        
     
     @Override
     public List<String> getAllRentalCompanies() {
