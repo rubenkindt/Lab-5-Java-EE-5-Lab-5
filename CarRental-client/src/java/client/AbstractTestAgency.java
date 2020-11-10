@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import rental.Reservation2;
+import rental.Reservation;
 
 /**
  * 
@@ -92,7 +92,7 @@ public abstract class AbstractTestAgency<ReservationSession, ManagerSession> ext
      *
      * @throws Exception if things go wrong, throw exception
      */
-    protected abstract List<Reservation2> confirmQuotes(ReservationSession session, String name) throws Exception;
+    protected abstract List<Reservation> confirmQuotes(ReservationSession session, String name) throws Exception;
 
     /**
      * Get the number of reservations made by the given renter (across all 

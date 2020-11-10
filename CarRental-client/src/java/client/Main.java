@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
-import rental.CarType2;
-import rental.Reservation2;
+import rental.CarType;
+import rental.Reservation;
 import rental.ReservationConstraints;
 import session.ManagerSessionRemote;
 import session.ReservationSessionRemote;
@@ -18,6 +18,11 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
 
     public static void main(String[] args) throws Exception {
         // TODO: use updated manager interface to load cars into companies
+        InitialContext context = new InitialContext();
+        
+        ManagerSessionRemote manager = (ManagerSessionRemote)context.lookup(ManagerSessionRemote.class.getName());    
+        manager.loadCompanyInDb("hertz.csv");
+        manager.loadCompanyInDb("dockx.csv");
         
         
         new Main("trips").run();
@@ -54,8 +59,9 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     @Override
     protected void createQuote(ReservationSessionRemote session, String name, Date start, Date end, String carType, String region) throws Exception {
         if (session.getRenterName().equals(name)){
+            ReservationConstraints con =new ReservationConstraints(start,end,carType,region);
             
-            session.createQuote(  name,  start,  end,  carType,  region);
+            session.createQuote(  name, con);
         }
         else{
             throw new Exception("Name does not match: "+session.getRenterName()+" Vs: "+name);
@@ -64,11 +70,11 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
 
     @Override
     protected List<Reservation> confirmQuotes(ReservationSessionRemote session, String name) throws Exception {
-        if (session.getName().equals(name)){
+        if (session.getRenterName().equals(name)){
             return session.confirmQuotes();
         }
         else{
-            throw new Exception("Name does not match: "+session.getName()+" Vs: "+name);
+            throw new Exception("Name does not match: "+session.getRenterName()+" Vs: "+name);
         }
     }
 
@@ -77,15 +83,6 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
         return ms.getNrOfReservationsByClient(clientName);
     }
 
-    @Override
-    protected int getNumberOfReservationsForCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
-        
-        return ms.getNrOfReservationsByCarTypeInCompany(carRentalName, carType);
-    }
-    
-    
-    
-    
     @Override
     protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -97,37 +94,7 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     }
 
     @Override
-    protected CarType2 getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected ReservationSessionRemote getNewReservationSession(String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected ManagerSessionRemote getNewManagerSession(String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void getAvailableCarTypes(ReservationSessionRemote session, Date start, Date end) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected void createQuote(ReservationSessionRemote session, String name, Date start, Date end, String carType, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected List<Reservation2> confirmQuotes(ReservationSessionRemote session, String name) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
+    protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

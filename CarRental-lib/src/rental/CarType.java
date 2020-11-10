@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import rental.CarType;
 
 /**
  *
@@ -26,6 +27,19 @@ public class CarType implements Serializable {
     private boolean smokingAllowed;
     private double rentalPricePerDay;
     private BigDecimal trunkSpace;
+    
+    public CarType(){
+        
+    }
+    
+    public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed) {
+        this.name = name;
+        this.nbOfSeats = nbOfSeats;
+        this.trunkSpace = new BigDecimal(trunkSpace);
+        this.rentalPricePerDay = rentalPricePerDay;
+        this.smokingAllowed = smokingAllowed;
+    }
+    
 
     public void setNbOfSeats(int nbOfSeats) {
         this.nbOfSeats = nbOfSeats;
@@ -80,7 +94,7 @@ public class CarType implements Serializable {
             return false;
 	if (getClass() != obj.getClass())
             return false;
-	CarType2 other = (CarType2) obj;
+	CarType other = (CarType) obj;
 	if (name == null) {
             if (other.getName() != null)
                 return false;
