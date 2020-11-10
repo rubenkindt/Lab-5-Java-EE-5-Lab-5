@@ -27,9 +27,33 @@ import javax.persistence.OneToMany;
  *
  * @author ruben
  */
+
+// quite ussefull site https://docs.oracle.com/cd/E19159-01/819-3669/bnbtg/index.html
 @Entity
 @NamedQueries({
- @NamedQuery(name = "CarRentalCompany.findAll", query = "SELECT c FROM CarRentalCompany c")
+ @NamedQuery(name = "CarRentalCompany.findAll", query = "SELECT DISTINCT c FROM CarRentalCompany c")
+    ,@NamedQuery(name = "CarRentalCompany.getCarTypes", 
+            query = "SELECT DISTINCT c.carTypes FROM CarRentalCompany c WHERE c.name LIKE :compName")
+    ,@NamedQuery(name = "CarRentalCompany.getCarIds", 
+            query = "SELECT DISTINCT ca.id FROM CarRentalCompany co, Car ca WHERE co.name LIKE :compName AND ca.carTypes.name LIKE :typeName")
+    ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservations", 
+            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.name LIKE :compName AND co.cars.type.name LIKE :typeName AND co.cars.reservations.carId = :id")
+    ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservations2", 
+            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.name LIKE :compName AND co.cars.type.name LIKE :typeName")
+    ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservationsByClient", 
+            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.cars.reservations.getCarRenter() LIKE :client")
+    ,@NamedQuery(name = "CarRentalCompany.getAllRentalCompanyNames", 
+            query = "SELECT DISTINCT co.name FROM CarRentalCompany co")
+    
+    //source https://www.w3resource.com/sql/aggregate-functions/max-count.php see SQL MAX() and COUNT() with HAVING
+    ,@NamedQuery(name = "CarRentalCompany.getbestClients", 
+            query = "SELECT carRenter() from reservation GROUP BY carRenter() HAVING COUNT(carRenter())=(SELECT MAX(mycount) FROM (SELECT carRenter(), COUNT(carRenter() mycount FROM reservation GROUP BY rarRenter()))")
+    
+    ,@NamedQuery(name = "CarRentalCompany.getCheapest", 
+            query = "SELECT TOP 1 co.cars.type from CarRentalCompany co WHERE co.regions=:region and (co.cars.reservations=NULL OR (co.cars.reservations.getStartDate() NOT BETWEEN :start AND :stop AND co.cars.reservations.getEndDate() NOT BETWEEN :start AND :stop) ORDER BY co.cars.type.rentalPricePerDay DESC) )")
+    
+
+        
     })
 public class CarRentalCompany implements Serializable {
 

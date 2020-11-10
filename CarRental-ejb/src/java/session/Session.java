@@ -16,12 +16,12 @@ import rental.CarRentalCompany;
  *
  * @author Ruben Kindt r0656495
  */
+// Java class to prevent duplicate code in ReservationSession and ManagerSession
 public class Session {
     @PersistenceContext
     EntityManager em;
     
     protected List<CarRentalCompany> getRentalCompanies(){
-        
         return (List<CarRentalCompany>) em.createNamedQuery("CarRentalCompany.findAll").getResultList();
         
     }
@@ -45,6 +45,8 @@ public class Session {
                 return comp;
             }
         }
+        throw new IllegalArgumentException("Company doesn't exist!: " + company);
+         
        */
     }
 }

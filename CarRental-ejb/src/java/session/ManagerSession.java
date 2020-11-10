@@ -3,7 +3,9 @@ package session;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,25 +31,37 @@ import rental.Reservation;
 @RolesAllowed("Manager")
 public class ManagerSession extends Session implements ManagerSessionRemote {
     
-   
     @PersistenceContext
     EntityManager em;
     
     @Override
-    public Set<CarType> getCarTypes(String company) {
+    public List<CarType> getCarTypes(String company) {
+        return em.createNamedQuery("CarRentalCompany.getCarTypes").setParameter("compName", company).getResultList();
+        
+        /*
+        List<CarType> ct=new ArrayList<CarType>();
         try {
-            return new HashSet<CarType>(RentalStore.getRental(company).getAllTypes());
+            List<CarRentalCompany> list=getRentalCompanies();
+            for (CarRentalCompany r : list){
+                ct.addAll(r.getAllTypes());
+            }
+            
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+        return ct;
+*/
     }
 
     @Override
-    public Set<Integer> getCarIds(String company, String type) {
+    public List<Integer> getCarIds(String company, String type) {
+        return em.createNamedQuery("CarRentalCompany.getCarIds").setParameter("compName", company).setParameter("typeName", type).getResultList();
+    }
+        /*
         Set<Integer> out = new HashSet<Integer>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+            for(Car c: getCompanyByName(company).getCars(type)){
                 out.add(c.getId());
             }
         } catch (IllegalArgumentException ex) {
@@ -56,22 +70,30 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
         }
         return out;
     }
+*/
 
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
+        return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservations").setParameter("compName", company).setParameter("typeName", type).setParameter("id",id).getSingleResult();
+    }
+     /*   
         try {
-            return RentalStore.getRental(company).getCar(id).getReservations().size();
+            return getCompanyByName(company).getCar(id).getReservations().size();
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
     }
-
+    */
+    
     @Override
     public int getNumberOfReservations(String company, String type) {
+        return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservations2").setParameter("compName", company).setParameter("typeName", type).getSingleResult();
+    }      
+        /*
         Set<Reservation> out = new HashSet<Reservation>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+            for(Car c: getCompanyByName(company).getCars(type)){
                 out.addAll(c.getReservations());
             }
         } catch (IllegalArgumentException ex) {
@@ -80,10 +102,18 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
         }
         return out.size();
     }
-
-    //@RolesAllowed("Manager")
+*/  
+    @Override
+    public List<CarType> getAvailableCarTypes(Date start, Date end) {
+        return  em.createNamedQuery("car.getAvailableCarTypes").setParameter("start", start).setParameter("end", end).getResultList();
+    
+    }
+    
     @Override
     public int getNrOfReservationsByClient(String clientName) {
+        return (int) em.createNamedQuery("CarRentalCompany.getNumberOfReservationsByClient").setParameter("client", clientName).getSingleResult();
+    }
+        /*
         Set<Reservation> res=new HashSet<Reservation>();
         for (Iterator<Map.Entry<String, CarRentalCompany>> entries = getRentals().entrySet().iterator(); entries.hasNext(); ) {
             Map.Entry<String, CarRentalCompany> compMap= entries.next();
@@ -92,6 +122,30 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
             res.addAll(compa.getReservationsBy(clientName));
         }
         return res.size();
+    }
+    */
+    
+    @Override
+    public List<String> getAllRentalCompanies() {
+        return  em.createNamedQuery("CarRentalCompany.getAllRentalCompanyNames").getResultList();
+    }
+
+    
+
+    @Override
+    public List<String> bestClients() {
+        return  em.createNamedQuery("CarRentalCompany.getbestClients").getResultList();
+        
+    }
+
+    @Override
+    public CarType mostPopular(int year) {
+        return (CarType) em.createNamedQuery("car.mostPopular").setParameter("year", year).getSingleResult();
+    }
+
+    @Override
+    public CarType getCheapest(Date start, Date end, String region) {
+        return (CarType) em.createNamedQuery("CarRentalCompany.getCheapest").setParameter("start", start).setParameter("end", end).setParameter("region", region).getSingleResult();
     }
     
     
@@ -153,6 +207,8 @@ public class ManagerSession extends Session implements ManagerSessionRemote {
 
         return out;
     }
+
+  
     
     static class CrcData {
             public List<Car> cars = new LinkedList<Car>();

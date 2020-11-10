@@ -17,7 +17,7 @@ public interface ReservationSessionRemote {
     
     public String getRenterName();
     
-    public Set<String> getAllRentalCompanies();
+    public List<String> getAllRentalCompanies();
     
     public List<CarType> getAvailableCarTypes(Date start, Date end);
     

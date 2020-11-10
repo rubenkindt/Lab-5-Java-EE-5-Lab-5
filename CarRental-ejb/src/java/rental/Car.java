@@ -30,7 +30,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "car.findAll", query = "SELECT w FROM Car w")
     , @NamedQuery(name = "car.findById", query = "SELECT w FROM Car w WHERE w.type = :cartyp")
-    , @NamedQuery(name = "car.findByWnaam", query = "SELECT w FROM Car w WHERE w.id = :cid")})
+    , @NamedQuery(name = "car.getAvailableCarTypes", 
+            query = "SELECT DISTINCT cars.type FROM car ca WHERE ca.reservations is NULL or ca.reservations.getStartDate() NOT BETWEEN :start AND :end AND getEndDate() NOT BETWEEN :start AND :end")
+    ,@NamedQuery(name = "car.mostPopular", 
+            query = "SELECT TOP 1 car.type FROM car ca  WHERE YEAR(ca.reservations.getStartDate())=:year ) GROUP BY ca.type ORDER BY count(*)")
+   
+})
 public class Car implements Serializable {
 
     private static final long serialVersionUID = 1L;

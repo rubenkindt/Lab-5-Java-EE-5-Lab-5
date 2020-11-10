@@ -25,6 +25,9 @@ public class ReservationSession extends Session implements ReservationSessionRem
 
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
+        return  em.createNamedQuery("car.getAvailableCarTypes").setParameter("start", start).setParameter("end", end).getResultList();
+    
+        /*
         List<CarType> availableCarTypes = new LinkedList<CarType>();
         for(CarRentalCompany crc : getRentalCompanies()) {
             for(CarType ct : crc.getAvailableCarTypes(start, end)) {
@@ -32,7 +35,7 @@ public class ReservationSession extends Session implements ReservationSessionRem
                     availableCarTypes.add(ct);
             }
         }
-        return availableCarTypes;
+        return availableCarTypes;*/
     }
 
     @Override
@@ -84,12 +87,8 @@ public class ReservationSession extends Session implements ReservationSessionRem
     }
 
     @Override
-    public Set<String> getAllRentalCompanies() {
-        Set<String> easterEgg = new HashSet<String>();
-        for(CarRentalCompany crc : getRentalCompanies()) {
-            easterEgg.add(crc.getName());
-        }
-        return easterEgg;
+    public List<String> getAllRentalCompanies() {
+        return  em.createNamedQuery("CarRentalCompany.getAllRentalCompanyNames").getResultList();
     }
 
    
