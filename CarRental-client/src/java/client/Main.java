@@ -18,7 +18,6 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO: use updated manager interface to load cars into companies
         InitialContext context = new InitialContext();
         
         ManagerSessionRemote manager = (ManagerSessionRemote)context.lookup(ManagerSessionRemote.class.getName());    
@@ -34,11 +33,8 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     @Override
     protected ReservationSessionRemote getNewReservationSession(String name) throws Exception {
         InitialContext context = new InitialContext();
-        //throws NamingExeption
-        
         ReservationSessionRemote session2 = (ReservationSessionRemote)context.lookup(ReservationSessionRemote.class.getName());    
         session2.setRenterName(name);
-        //String str =session2.getName();
         return session2; 
     }
 
