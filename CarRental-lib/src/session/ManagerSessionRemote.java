@@ -28,9 +28,8 @@ public interface ManagerSessionRemote {
     
     public List<String> bestClients();
     
-    public CarType mostPopular(int year);
+    public CarType mostPopular(String company,int year);
     
-    public CarType getCheapest(Date start,Date end, String region);
     
     
     

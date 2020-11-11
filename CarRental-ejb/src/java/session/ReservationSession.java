@@ -104,5 +104,9 @@ public class ReservationSession implements ReservationSessionRemote {
         return  em.createNamedQuery("CarRentalCompany.getAllRentalCompanyNames").getResultList();
     }
 
-   
+    @Override
+    public String getCheapest(Date start, Date end, String region) {
+        return (String) em.createNamedQuery("CarRentalCompany.getCheapest").setParameter("start", start).setParameter("end", end).setParameter("region", region).getSingleResult();
+    }
+    
 }

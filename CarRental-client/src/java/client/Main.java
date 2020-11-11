@@ -1,6 +1,7 @@
 package client;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
@@ -79,27 +80,32 @@ public class Main extends AbstractTestManagement<ReservationSessionRemote, Manag
     }
 
     @Override
-    protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName) throws Exception {
+    protected int getNumberOfReservationsBy(ManagerSessionRemote ms, String clientName){
         return ms.getNrOfReservationsByClient(clientName);
     }
 
     @Override
-    protected Set<String> getBestClients(ManagerSessionRemote ms) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected Set<String> getBestClients(ManagerSessionRemote ms) {
+        Set<String> convertedToSet = new HashSet<String>();
+        List<String> list=ms.bestClients();
+        for (String str : list) 
+            convertedToSet.add(str); 
+        return convertedToSet;
     }
 
     @Override
     protected String getCheapestCarType(ReservationSessionRemote session, Date start, Date end, String region) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return session.getCheapest(start, end, region);
+        
     }
 
     @Override
     protected CarType getMostPopularCarTypeIn(ManagerSessionRemote ms, String carRentalCompanyName, int year) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ms.mostPopular(carRentalCompanyName,year);
     }
 
     @Override
     protected int getNumberOfReservationsByCarType(ManagerSessionRemote ms, String carRentalName, String carType) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ms.getNumberOfReservations(carRentalName, carType);
     }
 }

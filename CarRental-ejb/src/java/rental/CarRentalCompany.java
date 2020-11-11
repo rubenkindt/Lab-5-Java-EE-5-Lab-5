@@ -50,9 +50,11 @@ import javax.persistence.OneToMany;
             query = "SELECT carRenter() from reservation GROUP BY carRenter() HAVING COUNT(carRenter())=(SELECT MAX(mycount) FROM (SELECT carRenter(), COUNT(carRenter() mycount FROM reservation GROUP BY rarRenter()))")
     
     ,@NamedQuery(name = "CarRentalCompany.getCheapest", 
-            query = "SELECT TOP 1 co.cars.type from CarRentalCompany co WHERE co.regions=:region and (co.cars.reservations=NULL OR (co.cars.reservations.getStartDate() NOT BETWEEN :start AND :stop AND co.cars.reservations.getEndDate() NOT BETWEEN :start AND :stop) ORDER BY co.cars.type.rentalPricePerDay DESC) )")
+            query = "SELECT TOP 1 co.cars.type.name from CarRentalCompany co WHERE co.regions=:region and (co.cars.reservations=NULL OR (co.cars.reservations.getStartDate() NOT BETWEEN :start AND :stop AND co.cars.reservations.getEndDate() NOT BETWEEN :start AND :stop) ORDER BY co.cars.type.rentalPricePerDay DESC) )")
     
-
+    ,@NamedQuery(name = "CarRentalCompany.mostPopular", 
+            query = "SELECT TOP 1 co.cars.type FROM CarRentalCompany co WHERE co.name LIKE :company AND YEAR(co.cars.reservations.getStartDate())=:year ) GROUP BY co.cars.type ORDER BY count(*)")
+   
         
     })
 public class CarRentalCompany implements Serializable {

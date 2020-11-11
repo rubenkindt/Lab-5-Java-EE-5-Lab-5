@@ -27,4 +27,6 @@ public interface ReservationSessionRemote {
     
     public List<Reservation> confirmQuotes() throws ReservationException;
     
+    public String getCheapest(Date start,Date end, String region);
+    
 }
