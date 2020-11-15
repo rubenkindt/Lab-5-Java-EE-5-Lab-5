@@ -25,7 +25,7 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author ruben
+ * @author Ruben Kindt R065649
  */
 
 // quite ussefull site https://docs.oracle.com/cd/E19159-01/819-3669/bnbtg/index.html

@@ -10,21 +10,16 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import static javax.persistence.CascadeType.REMOVE;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author ruben
+ * @author Ruben Kindt R065649
  */
 @Entity
 @NamedQueries({
@@ -45,6 +40,10 @@ public class Car implements Serializable {
     @OneToMany(cascade=REMOVE, mappedBy = "car")
     private Set<Reservation> reservations;
     
+    
+    public Car() {
+    
+    }
     
     public Car(int uid, CarType type) {
     	this.id = uid;
