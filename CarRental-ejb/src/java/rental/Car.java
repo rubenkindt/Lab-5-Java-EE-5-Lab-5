@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "car.findAll", query = "SELECT w FROM Car w")
     , @NamedQuery(name = "car.findById", query = "SELECT w FROM Car w WHERE w.type = :cartyp")
     , @NamedQuery(name = "car.getAvailableCarTypes", 
-            query = "SELECT DISTINCT cars.type FROM car ca JOIN ca.reservations res WHERE res is NULL OR res.startDate NOT BETWEEN :start AND :end AND res.endDate NOT BETWEEN :start AND :end")
+            query = "SELECT DISTINCT ca.type FROM Car ca JOIN ca.reservations res WHERE res is NULL OR res.startDate NOT BETWEEN :start AND :end AND res.endDate NOT BETWEEN :start AND :end")
     
 })
 public class Car implements Serializable {

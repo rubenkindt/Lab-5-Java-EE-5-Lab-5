@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/11720451/attribute-in-entity-class-has-a-mappedby-value-which-does-exist-in-its-owning-en

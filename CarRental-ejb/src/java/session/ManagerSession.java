@@ -84,7 +84,7 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public CarType mostPopular(String company,int year) {
-        return (CarType) em.createNamedQuery("CarRentalCompany.mostPopular").setParameter("company", company).setParameter("year", year).getSingleResult();
+        return (CarType) em.createNamedQuery("CarRentalCompany.mostPopular").setParameter("company", company).setParameter("year", year).setMaxResults(1).getSingleResult();
     }
 
     
