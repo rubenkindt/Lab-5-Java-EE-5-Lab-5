@@ -9,12 +9,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -26,7 +28,7 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "car.findAll", query = "SELECT w FROM Car w")
     , @NamedQuery(name = "car.findById", query = "SELECT w FROM Car w WHERE w.type = :cartyp")
     , @NamedQuery(name = "car.getAvailableCarTypes", 
-            query = "SELECT DISTINCT cars.type FROM car ca WHERE ca.reservations is NULL or ca.reservations.getStartDate() NOT BETWEEN :start AND :end AND getEndDate() NOT BETWEEN :start AND :end")
+            query = "SELECT DISTINCT cars.type FROM car ca JOIN ca.reservations res WHERE res is NULL OR res.startDate NOT BETWEEN :start AND :end AND res.endDate NOT BETWEEN :start AND :end")
     
 })
 public class Car implements Serializable {
@@ -34,10 +36,12 @@ public class Car implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @NotNull
-    private int id;
-    @OneToMany(cascade=REMOVE, mappedBy = "car")
+    private int carid;
+    
+    @OneToOne(cascade=PERSIST, mappedBy = "cartype")
     private CarType type;
-    @OneToMany(cascade=REMOVE, mappedBy = "car")
+    
+    @OneToMany(cascade=REMOVE, mappedBy = "quote")
     private Set<Reservation> reservations;
     
     
@@ -46,7 +50,7 @@ public class Car implements Serializable {
     }
     
     public Car(int uid, CarType type) {
-    	this.id = uid;
+    	this.carid = uid;
         this.type = type;
         this.reservations = new HashSet<Reservation>();
     }
@@ -72,12 +76,12 @@ public class Car implements Serializable {
     }
 
     public int getId() {
-        return id;
+        return carid;
     }
 
     @Override
     public String toString() {
-        return "rental.Car[ id=" + id + " ]";
+        return "rental.Car[ id=" + carid + " ]";
     }
    
     public void addReservation(Reservation res) {

@@ -28,32 +28,32 @@ import javax.persistence.OneToMany;
  * @author Ruben Kindt R065649
  */
 
-// quite ussefull site https://docs.oracle.com/cd/E19159-01/819-3669/bnbtg/index.html
+//  usefull site https://docs.oracle.com/cd/E19159-01/819-3669/bnbtg/index.html
 @Entity
 @NamedQueries({
  @NamedQuery(name = "CarRentalCompany.findAll", query = "SELECT DISTINCT c FROM CarRentalCompany c")
     ,@NamedQuery(name = "CarRentalCompany.getCarTypes", 
             query = "SELECT DISTINCT c.carTypes FROM CarRentalCompany c WHERE c.name LIKE :compName")
     ,@NamedQuery(name = "CarRentalCompany.getCarIds", 
-            query = "SELECT DISTINCT ca.id FROM CarRentalCompany co, Car ca WHERE co.name LIKE :compName AND ca.carTypes.name LIKE :typeName")
+            query = "SELECT DISTINCT ca.id FROM CarRentalCompany co join co.cars ca JOIN ca.type ty WHERE co.name LIKE :compName AND ty.name LIKE :typeName")
     ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservations", 
-            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.name LIKE :compName AND co.cars.type.name LIKE :typeName AND co.cars.reservations.carId = :id")
+            query = "SELECT count(ca.reservations) FROM CarRentalCompany co JOIN co.cars ca JOIN ca.type ty JOIN ca.reservations res WHERE co.name LIKE :compName AND ty.name LIKE :typeName AND res.carId = :id")
     ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservations2", 
-            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.name LIKE :compName AND co.cars.type.name LIKE :typeName")
+            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co JOIN co.cars ca JOIN ca.type ty WHERE co.name LIKE :compName AND ty.name LIKE :typeName")
     ,@NamedQuery(name = "CarRentalCompany.getNumberOfReservationsByClient", 
-            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co WHERE co.cars.reservations.getCarRenter() LIKE :client")
+            query = "SELECT count(co.cars.reservations) FROM CarRentalCompany co JOIN co.cars ca JOIN ca.reservations res WHERE res.carRenter LIKE :client")
     ,@NamedQuery(name = "CarRentalCompany.getAllRentalCompanyNames", 
             query = "SELECT DISTINCT co.name FROM CarRentalCompany co")
     
     //source https://www.w3resource.com/sql/aggregate-functions/max-count.php see SQL MAX() and COUNT() with HAVING
     ,@NamedQuery(name = "CarRentalCompany.getbestClients", 
-            query = "SELECT carRenter() from reservation GROUP BY carRenter() HAVING COUNT(carRenter())=(SELECT MAX(mycount) FROM (SELECT carRenter(), COUNT(carRenter() mycount FROM reservation GROUP BY rarRenter()))")
+            query = "SELECT res.carRenter from CarRentalCompany co JOIN co.cars ca JOIN ca.reservations res GROUP BY res.carRenter HAVING COUNT(res.carRenter))=(SELECT MAX(mycount) FROM (SELECT res.carRenter, COUNT(res.carRenter mycount FROM CarRentalCompany co JOIN co.cars ca JOIN ca.reservations res GROUP BY res.carRenter))")
     
     ,@NamedQuery(name = "CarRentalCompany.getCheapest", 
-            query = "SELECT TOP 1 co.cars.type.name from CarRentalCompany co WHERE co.regions=:region and (co.cars.reservations=NULL OR (co.cars.reservations.getStartDate() NOT BETWEEN :start AND :stop AND co.cars.reservations.getEndDate() NOT BETWEEN :start AND :stop) ORDER BY co.cars.type.rentalPricePerDay DESC) )")
+            query = "SELECT TOP 1 co.cars.type.name from CarRentalCompany co JOIN co.cars ca JOIN ca.reservations res join ca.type ty WHERE co.regions=:region and (ca.reservations=NULL OR (res.startDate NOT BETWEEN :start AND :stop AND res.endDate NOT BETWEEN :start AND :stop) ORDER BY ty.rentalPricePerDay DESC) )")
     
     ,@NamedQuery(name = "CarRentalCompany.mostPopular", 
-            query = "SELECT TOP 1 co.cars.type FROM CarRentalCompany co WHERE co.name LIKE :company AND YEAR(co.cars.reservations.getStartDate())=:year ) GROUP BY co.cars.type ORDER BY count(*)")
+            query = "SELECT TOP 1 ca.type FROM CarRentalCompany co JOIN co.cars ca JOIN ca.reservations res WHERE co.name LIKE :company AND YEAR(res.startDate)=:year ) GROUP BY ca.type ORDER BY count(*)")
    
         
     })

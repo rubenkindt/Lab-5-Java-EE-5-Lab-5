@@ -6,7 +6,10 @@
 package rental;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.AUTO;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,9 +23,11 @@ import rental.Quote;
 public class Reservation extends Quote implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
+
+    
     @ManyToOne
-    @JoinColumn(name = "CARID", referencedColumnName = "CARID")
+    @JoinColumn(name = "carid", referencedColumnName = "carid")
+    
     private int carId;
     
     

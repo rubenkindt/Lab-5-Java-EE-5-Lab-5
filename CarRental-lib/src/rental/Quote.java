@@ -2,10 +2,24 @@ package rental;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.AUTO;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
 
+@MappedSuperclass
 public class Quote implements Serializable {
+    
+    @Id
+    @GeneratedValue(strategy=AUTO)
+    @Column(name="quoteId")
+    private int quoteId;
 
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date startDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
     private String carRenter;
     private String rentalCompany;
