@@ -12,7 +12,10 @@ import java.util.Set;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -35,13 +38,13 @@ public class Car implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int carid;
     
-    @OneToOne(cascade=PERSIST, mappedBy = "cartype")
+    @ManyToOne(cascade=PERSIST)
     private CarType type;
     
-    @OneToMany(cascade=REMOVE, mappedBy = "quote")
+    @OneToMany(cascade=REMOVE)
     private Set<Reservation> reservations;
     
     

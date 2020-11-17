@@ -25,9 +25,6 @@ public class Reservation extends Quote implements Serializable {
     private static final long serialVersionUID = 1L;
 
     
-    @ManyToOne
-    @JoinColumn(name = "carid", referencedColumnName = "carid")
-    
     private int carId;
     
     

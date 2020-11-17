@@ -62,11 +62,10 @@ public class CarRentalCompany implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     private String name;
-    @OneToMany(cascade=REMOVE, mappedBy = "carrentalcompany")
+    @OneToMany(cascade=REMOVE)
     private List<Car> cars;
-    @OneToMany(cascade=REMOVE, mappedBy = "carrentalcompany")
+    @OneToMany(cascade=REMOVE)
     private Set<CarType> carTypes = new HashSet<CarType>();
-    @OneToMany(cascade=REMOVE, mappedBy = "carrentalcompany")
     private List<String> regions;
     
     public CarRentalCompany (){
