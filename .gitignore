@@ -10,3 +10,13 @@
 /CarRental/dist/
 /CarRental/build/
 /CarRental-client/dist/
+/New folder/CarRental-client/nbproject/private/
+/New folder/CarRental-ejb/build/
+/New folder/CarRental-ejb/nbproject/private/
+/New folder/CarRental-lib/build/
+/New folder/CarRental-lib/dist/
+/New folder/CarRental-lib/nbproject/private/
+/New folder/CarRental/build/
+/New folder/CarRental/nbproject/private/
+
+*.pdf
